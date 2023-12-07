@@ -8,9 +8,6 @@ router.get('/get/:id', (req, res) => {
 });
 
 router.get('/test', (req, res) => {
-  // console.log('a')
-  // let page = req.query.page;
-  // let sort = req.query.sort;
   const{username, email, address} = req.query;
 
   console.log(username, email, address);
