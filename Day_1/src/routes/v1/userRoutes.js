@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const UserController = require('../../controllers/userController');
+const userController = require('../../controllers/userController');
 
 router.get('/get/:id', (req, res) => {
   let id = req.params;
@@ -19,35 +21,14 @@ router.get('/test', (req, res) => {
   res.status(200).json({msg: `Get query string` });
 });
 
-router.post('/', (req, res) => {
-  console.log(req.body);
-  const {username, password} = req.body;
-
-  res.status(200).json({
-    username,
-    password
-   });
-});
+//Gọi đến controller
+router.post('/', userController.create )
 
 
-router.put('/', (req, res) => {
-  console.log(req.body);
-  const {username, password} = req.body;
+router.put('/', userController.update )
 
-  res.status(200).json({
-    username,
-    password
-   });
-});
 
-router.delete('/:username/:password',(req,res) => {
-  let username = req.params.username;
-  let password = req.params.password;
-  console.log(username,password)
-
-  res.status(200).json({msg: `Username: ${username},Password: ${password}`});
-
-});
+router.delete('/:username/:password',userController.delete)
 
 
 module.exports = router;

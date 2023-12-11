@@ -1,4 +1,6 @@
 const express = require('express');
+const ProducteController = require('../../controllers/productController');
+const productController = require('../../controllers/productController');
 const router = express.Router();
 
 router.get('/get/:id', (req, res) => {
@@ -7,45 +9,13 @@ router.get('/get/:id', (req, res) => {
   res.status(200).json({msg: `Get ID ${id}` });
 });
 
-router.get('/test', (req, res) => {
- 
-  const{product_code, product_name} = req.query;
+router.get('/test',productController.get)
 
-  console.log(product_code, product_name);
+router.post('/',productController.create)
 
+router.put('/', productController.update)
 
-  res.status(200).json({msg: `MaSP: ${product_code},TenSP: ${product_name}` });
-});
-
-router.post('/', (req, res) => {
-  console.log(req.body);
-  const {product_code, product_name} = req.body;
-
-  res.status(200).json({
-    product_code,
-    product_name
-   });
-});
-
-
-router.put('/', (req, res) => {
-  console.log(req.body);
-  const {product_code, product_name} = req.body;
-
-  res.status(200).json({
-    product_code,
-    product_name
-   });
-});
-
-router.delete('/:product_code/:product_name',(req,res) => {
-  let product_code = req.params.product_code;
-  let product_name = req.params.product_name;
-  console.log(product_code,product_name)
-
-  res.status(200).json({msg: `product_code: ${product_code},product_name: ${product_name}`});
-
-});
+router.delete('/:product_code/:product_name',productController.delete)
 
 
 module.exports = router;
