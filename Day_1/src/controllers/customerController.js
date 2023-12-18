@@ -1,78 +1,79 @@
 const e = require("express");
 
+const CustomerService = require("../services/CustomerService");
+
 class CustomerController{
     
-    //create => POST
-    create = (req,res,next) => {
+     //create => POST
+     create = async(req,res,next) => {
         try {
+            const {username, email, phone, age, address, gender } = req.body;
+            // abc();
+            //Gọi đến tầng service
+            let data = {
+                username, email, phone, age, address, gender
+            }
+            const customer = await CustomerService.createCustomer(data);
 
-            console.log(req.body);
-            const {username, email, address } = req.body;
-            console.log(`Create customer !`)
-          
+            console.log(`Create customer!`)
             res.status(200).json({
-              username,
-              email, 
-              address 
+                customer
              });
-
         } catch (error){
             throw error;
         }
     }
     
     //get => GET
-    get = (req,res,next) => {
+    getAll= async (req,res,next) => {
         try {
-
-            const{username, email, address} = req.query;
-            console.log(`Get customer !`)
-            console.log(username, email, address);
-            res.status(200).json({
-                username,
-                email,
-                address
-            });
-           
+           const customers = await CustomerService.getAll();
+           res.status(200).json((
+            customers
+           ))
         } catch (error){
             throw error;
         }
     }
 
     // update => PUT
-    update = (req,res,next) => {
+    update = async(req,res,next) => {
         try {
-            console.log(req.body);
+            const {username, email, phone, age, address, gender} = req.body;
+            const{id} = req.params;
+            // abc();
+            //Gọi đến tầng service
+            let data = {
+                username, email, phone, age, address, gender
+            }
+            const result = await CustomerService.updateCustomer(id,data);
 
-            const {username, email, address} = req.body;
-            console.log(`Update customer !`)
-          
-            res.status(200).json({
-              username,
-              email, 
-              address 
-             });
-
+            if(result) {
+                res.status(200).json({'msg': `Update`});
+            }else {
+                throw new Error(`Update fail`);
+            }
+         
         } catch (error){
             throw error;
         }
     }
 
     //delete => DELETE
-    delete = (req,res,next) => {
+    delete = async(req,res,next) => {
         try {
-            let username = req.params.username;
-            let email = req.params.email;
-            let address = req.params.address;
-            console.log(`Delete customer !`)
-            console.log(username,email,address)
+            const{id} = req.params;
+            // abc();
+            //Gọi đến tầng service
+            
+            const result = await CustomerService.deleteCustomer(id);
 
-            res.status(200).json({
-                username,
-                email,
-                address
-            });
-
+            if(result) {
+                res.status(200).json({'msg': `delete`});
+            }else {
+                throw new Error(`delete fail`);
+            }
+         
         } catch (error){
             throw error;
         }

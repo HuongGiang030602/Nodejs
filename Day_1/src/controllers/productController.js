@@ -1,64 +1,79 @@
 const e = require("express");
 
-class ProducteController{
+const ProductService = require("../services/ProductService");
+
+class ProductController{
     
-    //create => POST
-    create = (req,res,next) => {
+   //create => POST
+   create = async(req,res,next) => {
         try {
+            const {Product_name, manufacturer, year_of_manufacture, quantity, price } = req.body;
+            // abc();
+            //Gọi đến tầng service
+            let data = {
+               Product_name, manufacturer, year_of_manufacture, quantity, price
+            }
+            const product = await ProductService.createProduct(data);
 
-            console.log(req.body);
-            console.log(req.body);
-            const {product_code, product_name} = req.body;
-          
+            console.log(`Create product!`)
             res.status(200).json({
-              product_code,
-              product_name
-             });
-
+                product
+            });
         } catch (error){
             throw error;
         }
     }
-    
+
     //get => GET
-    get = (req,res,next) => {
+    getAll= async (req,res,next) => {
         try {
-
-            const{product_code, product_name} = req.query;
-
-            console.log(product_code, product_name);
-        
-            res.status(200).json({msg: `MaSP: ${product_code},TenSP: ${product_name}` });
-           
+        const products = await ProductService.getAll();
+        res.status(200).json((
+            products
+        ))
         } catch (error){
             throw error;
         }
     }
 
     // update => PUT
-    update = (req,res,next) => {
+    update = async(req,res,next) => {
         try {
-            console.log(req.body);
-            const {product_code, product_name} = req.body;
-          
-            res.status(200).json({
-              product_code,
-              product_name
-             });
+            const {Product_name, manufacturer, year_of_manufacture, quantity, price} = req.body;
+            const{id} = req.params;
+            // abc();
+            //Gọi đến tầng service
+            let data = {
+               Product_name, manufacturer, year_of_manufacture, quantity, price
+            }
+            const result = await ProductService.updateProduct(id,data);
 
+            if(result) {
+                res.status(200).json({'msg': `Update`});
+            }else {
+                throw new Error(`Update fail`);
+            }
+        
         } catch (error){
             throw error;
         }
     }
 
     //delete => DELETE
-    delete = (req,res,next) => {
+    delete = async(req,res,next) => {
         try {
-            let product_code = req.params.product_code;
-            let product_name = req.params.product_name;
-            console.log(product_code,product_name)
+            const{id} = req.params;
+            // abc();
+            //Gọi đến tầng service
+            
+            const result = await ProductService.deleteProduct(id);
 
-            res.status(200).json({msg: `product_code: ${product_code},product_name: ${product_name}`});
+            if(result) {
+                res.status(200).json({'msg': `delete`});
+            }else {
+                throw new Error(`delete fail`);
+            }
+        
         } catch (error){
             throw error;
         }
@@ -69,4 +84,4 @@ class ProducteController{
 
 
 
-module.exports = new ProducteController();
+module.exports = new ProductController();
