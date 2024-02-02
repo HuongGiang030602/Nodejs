@@ -40,7 +40,7 @@ router.post('/',validateCardData, verifyToken, upload.fields([
   { name : 'attachment', maxCount :5 },
 ]), cardController.create)
 
-router.get('/:idList',validateCardData, verifyToken, cardController.getAll)
+router.get('/:idList', verifyToken, cardController.getAll)
 router.get('/getCard/:idCard', cardController.getCard);
 
 
@@ -49,7 +49,7 @@ router.put('/:idCard',validateCardData, verifyToken, upload.fields([
   { name : 'attachment', maxCount :5 },
 ]), cardController.update)
 
-router.delete('/:idCard', validateCardData, verifyToken, cardController.delete)
+router.delete('/:idCard', verifyToken, cardController.delete)
 
 
 module.exports = router;

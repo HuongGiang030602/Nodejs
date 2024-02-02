@@ -38,7 +38,7 @@ router.get('/',userController.getAll)
 
 router.put('/:id',validateUserData, verifyToken,userController.update )
 
-router.delete('/:id',validateUserData, userController.delete)
+router.delete('/:id', userController.delete)
 
 
 

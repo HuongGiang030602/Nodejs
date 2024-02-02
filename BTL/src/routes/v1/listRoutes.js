@@ -28,11 +28,11 @@ const validateListData = (req, res, next) => {
 
 router.post('/',validateListData, verifyToken,listController.create)
 
-router.get('/:idBoard',validateListData, verifyToken,listController.getAll)
+router.get('/:idBoard', verifyToken,listController.getAll)
 
 router.put('/:idList',validateListData, verifyToken,listController.update)
 
-router.delete('/:idList', validateListData,verifyToken ,listController.delete)
+router.delete('/:idList',verifyToken ,listController.delete)
 
 
 module.exports = router;

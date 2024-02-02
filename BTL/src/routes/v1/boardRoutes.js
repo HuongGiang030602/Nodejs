@@ -28,11 +28,11 @@ const validateBoardData = (req, res, next) => {
 
 router.post('/',validateBoardData, verifyToken, upload.single('cover'),boardController.create)
 
-router.get('/',validateBoardData, verifyToken, boardController.getAll)
+router.get('/', verifyToken, boardController.getAll)
 
 router.put('/:id',validateBoardData, verifyToken, upload.single('cover'), boardController.update)
 
-router.delete('/:id', validateBoardData, verifyToken, upload.single('cover'), boardController.delete)
+router.delete('/:id', verifyToken, upload.single('cover'), boardController.delete)
 
 
 module.exports = router;
