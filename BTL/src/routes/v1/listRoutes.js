@@ -5,7 +5,7 @@ const verifyToken = require('../../middleware/VerifyToken')
 const Joi = require('joi');
 
 const listValidationSchema = Joi.object({
-    title: Joi.string().alphanum().messages({
+    title: Joi.string().messages({
       'any.required': `"title" không được bỏ trống !`
     }),
     idBoard: Joi.string().required()
