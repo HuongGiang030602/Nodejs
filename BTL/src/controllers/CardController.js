@@ -6,23 +6,23 @@ class CardController{
             const {title,idList,describe,member,due_date} = req.body;
 
             if(req.files) {
-                // Xử lý cover
-              const cover = req.files ? req.files['cover'] : null;
-              const coverPath = cover ? cover[0].path : null;
-              
-  
-              // Xử lý attachment
-              const attachment = req.files ? req.files['attachment'] : null;
-              const attachmentPaths = attachment ? attachment.map(file => file.path) : [];
-  
-              var data = {
-                  title, describe, member, due_date,
-  
-                  cover: coverPath, 
-                  idList,
-                  // attachment
-                  attachment: attachmentPaths
-              }
+                //kiểm tra xem có tệp đính kèm ảnh bìa ("cover") được gửi trong yêu cầu không
+                //Nếu có, xử lý chúng và lưu đường dẫn tương ứng vào các biến "coverPath" và "attachmentPaths"
+                const cover = req.files ? req.files['cover'] : null;
+                const coverPath = cover ? cover[0].path : null;
+                
+                // Xử lý attachment
+                const attachment = req.files ? req.files['attachment'] : null;
+                const attachmentPaths = attachment ? attachment.map(file => file.path) : [];
+    
+                var data = {
+                    title, describe, member, due_date,
+    
+                    cover: coverPath, 
+                    idList,
+                    // attachment
+                    attachment: attachmentPaths
+                }
             }     
     
             let dataCard = {idList};
@@ -34,7 +34,7 @@ class CardController{
                     card
                 })
             } else { 
-                res.status(200).json({
+                res.status(404).json({
                     'msg': 'Tạo card thất bại'
                 })
             }

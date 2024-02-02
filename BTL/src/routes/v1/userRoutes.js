@@ -32,11 +32,11 @@ const validateUserData = (req, res, next) => {
 
 //Gọi đến controller
 //Thong tin của 1 user: username, email, phone, age
-router.post('/',validateUserData ,userController.create )
+router.post('/',validateUserData, verifyToken,userController.create )
 
 router.get('/',userController.getAll)
 
-router.put('/:id',validateUserData, userController.update )
+router.put('/:id',validateUserData, verifyToken,userController.update )
 
 router.delete('/:id',validateUserData, userController.delete)
 

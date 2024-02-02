@@ -6,7 +6,6 @@ class ListService{
     checkIDBoard = async(data) => {
         try {
             const board = await Board.findOne({_id: data.idBoard})
-
             return board;
         } catch (error) {
             throw error;
