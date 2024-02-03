@@ -3,7 +3,7 @@ const cardService = require("../services/cardService");
 class CardController{
     create = async (req, res, next) => {
         try {
-            const {title,idList,describe,member,due_date} = req.body;
+            const {title,idList,describe,member,due_date,idBoard} = req.body;
 
             if(req.files) {
                 //kiểm tra xem có tệp đính kèm ảnh bìa ("cover") được gửi trong yêu cầu không
@@ -20,12 +20,13 @@ class CardController{
     
                     cover: coverPath, 
                     idList,
+                    idBoard,
                     // attachment
                     attachment: attachmentPaths
                 }
             }     
     
-            let dataCard = {idList};
+            let dataCard = {idList,idBoard};
             const list = await cardService.checkIDList(dataCard)
     
             if(list) {
@@ -74,35 +75,35 @@ class CardController{
     update = async (req, res, next) => {
         try {
             const {title, describe, member, due_date } = req.body;
-        const {idCard} = req.params;
-        if(req.files) {
-              // Xử lý cover
-            const cover = req.files ? req.files['cover'] : null;
-            const coverPath = cover ? cover[0].path : null;
-            
+            const {idCard} = req.params;
+            if(req.files) {
+                // Xử lý cover
+                const cover = req.files ? req.files['cover'] : null;
+                const coverPath = cover ? cover[0].path : null;
+                
 
-            // Xử lý attachment
-            const attachment = req.files ? req.files['attachment'] : null;
-            const attachmentPaths = attachment ? attachment.map(file => file.path) : [];
+                // Xử lý attachment
+                const attachment = req.files ? req.files['attachment'] : null;
+                const attachmentPaths = attachment ? attachment.map(file => file.path) : [];
 
-            var data = {
-                title, describe, member, due_date,
+                var data = {
+                    title, describe, member, due_date,
 
-                cover: coverPath, 
-                // attachment
-                attachment: attachmentPaths
+                    cover: coverPath, 
+                    // attachment
+                    attachment: attachmentPaths
+                }
+            }     
+
+            const result = await cardService.update(idCard, data)
+            console.log(result)
+            if(result) {
+                res.status(200).json({
+                    'msg': 'Updated card'
+                })
+            } else { 
+                throw new Error('Update failed');
             }
-        }     
-
-        const result = await cardService.update(idCard, data)
-        console.log(result)
-        if(result) {
-            res.status(200).json({
-                'msg': 'Updated card'
-            })
-        } else { 
-            throw new Error('Update failed');
-        }
         } catch (error) {
             next(error);
         }

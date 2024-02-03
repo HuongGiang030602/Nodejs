@@ -6,6 +6,7 @@ const cardSchema = new mongoose.Schema({
   describe: { type: String},
   due_date: { type: Date},
   idList: {type: String,require:true},
+  idBoard: {type: String,require:true},
   member: {type: Array},
   cover: {type: Array},
   attachment: {type: Array}

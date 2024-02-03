@@ -1,3 +1,4 @@
+const Board = require("../models/Board");
 const Card = require("../models/Card");
 const List = require("../models/List");
 
@@ -6,7 +7,8 @@ class CardService{
     checkIDList = async(data) => {
         try {
             const list = await List.findOne({_id: data.idList})
-            return list;
+            const board = await Board.findOne({_id: data.idBoard})
+            return list,board;
         } catch (error) {
             throw new Error('Không tồn tại idList !')
         }
