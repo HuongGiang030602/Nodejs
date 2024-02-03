@@ -32,7 +32,7 @@ const validateUserData = (req, res, next) => {
 
 //Gọi đến controller
 //Thong tin của 1 user: username, email, phone, age
-router.post('/',validateUserData, verifyToken,userController.create )
+router.post('/',validateUserData,userController.create )
 
 router.get('/',userController.getAll)
 

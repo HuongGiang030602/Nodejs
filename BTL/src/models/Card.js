@@ -2,7 +2,7 @@ const { date } = require('joi');
 const mongoose = require('mongoose');
 
 const cardSchema = new mongoose.Schema({
-  title: { type: String,require:true},
+  title: { type: String},
   describe: { type: String},
   due_date: { type: Date},
   idList: {type: String,require:true},

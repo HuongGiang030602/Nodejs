@@ -2,7 +2,7 @@ const { date } = require('joi');
 const mongoose = require('mongoose');
 
 const listSchema = new mongoose.Schema({
-  title: { type: String,require:true},
+  title: { type: String},
   position: { type: Number,default:0},
   date_created: { type: Date, default: Date.now()},
   idBoard: {type:String,require:true}
