@@ -1,41 +1,57 @@
 const User = require("../models/User");
+const bcrypt = require('bcrypt');
 
 class UserService {
 
     checkUserData = async(username,password) => {
         try {
-            const user = await User.findOne({ username, password });
+            const user = await User.findOne({ username });
+            if (!user) {
+                throw new Error('Tài khoản không tồn tại. Vui lòng đăng kí tài khoản!');
+            }
+
+            const decryption = await bcrypt.compare(password, user.password);
+            if (!decryption) {
+                throw new Error('Mật khẩu không đúng!');
+            }
+
             return user;
         } catch (error) {
-            throw new Error('Tài khoản không tồn tại. Vui lòng đăng kí tài khoản !')
+            throw new Error('Đã xảy ra lỗi khi kiểm tra dữ liệu người dùng');
         }
     }
 
     checkSignUp = async (data) => {
         try {
+            const errors = [];
+
             const user = await User.findOne({ username: data.username });
             if (user) {
-                return 'Username đã tồn tại';
+              errors.push('Username đã tồn tại');
             }
-    
+        
             const email = await User.findOne({ email: data.email });
             if (email) {
-                return 'Email đã tồn tại';
+              errors.push('Email đã tồn tại');
             }
-    
+        
             const phone = await User.findOne({ phone: data.phone });
             if (phone) {
-                return 'Phone đã tồn tại';
+              errors.push('Phone đã tồn tại');
             }
-
-
-            //kiểm tra password, password phải có ít nhất 8 ký tự
-            // ít nhất một chữ cái viết hoa, một chữ cái viết thường
-            // ít nhất một chữ số
-            const idPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(data.password);
-            if (!idPassword) {
-                return 'Password không đúng định dạng';
+        
+            // Kiểm tra password
+            const passwordUser = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!passwordUser.test(data.password)) {
+              errors.push('Password không đúng định dạng');
             }
+        
+            if (errors.length > 0) {
+              return errors;
+            }
+        
+            // Nếu không có lỗi, trả về null
+            return null;
     
         } catch (err) {
             throw err;
@@ -66,7 +82,7 @@ class UserService {
     async updateUser(id,data){
         try {
             const result = await User.updateOne({_id: id} , {username: data.username});
-            return true
+            return true;
         } catch (error) {
             throw error;
         }

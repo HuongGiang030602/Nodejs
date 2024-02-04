@@ -27,6 +27,7 @@ class BoardService{
         try {
             //Xử lý các nghiệp vụ liên quan
            const result = await Board.updateOne({_id: id},{title: data.title,cover: data.cover });
+           console.log(result);
            return true;
         } catch (error) {
             throw error;

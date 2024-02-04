@@ -27,7 +27,7 @@ class UserController{
                 const user = await UserService.createUser(data)
                 res.status(200).json({
                     'msg' : 'Đăng ký thành công !'
-            })
+                })
             }
 
         } catch (error){
@@ -60,9 +60,9 @@ class UserController{
             const result = await UserService.updateUser(id,data);
 
             if(result) {
-                res.status(200).json({'msg': `Update`});
+                res.status(200).json({'msg': `Update thành công`});
             }else {
-                throw new Error(`Update fail`);
+                throw new Error(`Không thành công`);
             }
          
         } catch (error){

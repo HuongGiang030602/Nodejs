@@ -3,7 +3,7 @@ const cardService = require("../services/cardService");
 class CardController{
     create = async (req, res, next) => {
         try {
-            const {title,idList,describe,member,due_date,idBoard} = req.body;
+            const {title,idList,describe,member,due_date} = req.body;
 
             if(req.files) {
                 //kiểm tra xem có tệp đính kèm ảnh bìa ("cover") được gửi trong yêu cầu không
@@ -20,13 +20,12 @@ class CardController{
     
                     cover: coverPath, 
                     idList,
-                    idBoard,
                     // attachment
                     attachment: attachmentPaths
                 }
             }     
     
-            let dataCard = {idList,idBoard};
+            let dataCard = {idList};
             const list = await cardService.checkIDList(dataCard)
     
             if(list) {

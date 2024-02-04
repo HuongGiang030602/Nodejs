@@ -7,8 +7,7 @@ class CardService{
     checkIDList = async(data) => {
         try {
             const list = await List.findOne({_id: data.idList})
-            const board = await Board.findOne({_id: data.idBoard})
-            return list,board;
+            return list;
         } catch (error) {
             throw new Error('Không tồn tại idList !')
         }

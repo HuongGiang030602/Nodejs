@@ -67,7 +67,7 @@ class BoardController{
           const board = await boardService.delete(id);
       
           if (board) {
-            res.status(200).json({ 'msg': 'Board deleted successfully!' });
+            res.status(200).json({ 'msg': 'Xoá thành công Board!',board });
           } else {
             throw new Error('Fail');
           }

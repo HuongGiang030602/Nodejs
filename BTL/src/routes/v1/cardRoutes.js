@@ -11,8 +11,7 @@ const cardValidationSchema = Joi.object({
     title: Joi.string().alphanum().messages({
       'any.required': `"title" không được bỏ trống !`
     }),
-    idList: Joi.string().required(),
-    idBoard: Joi.string(),
+    idList: Joi.string(),
     cover: Joi.array(),
     member: Joi.array(),
     describe: Joi.string(),
