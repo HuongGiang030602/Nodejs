@@ -62,15 +62,15 @@ class BoardController{
         }
       };
 
-      
+
     delete = async (req, res, next) => {
         try {
           const { id } = req.params;
       
-          const board = await boardService.delete(id);
+          const boardDelete = await boardService.delete(id);
       
-          if (board) {
-            res.status(200).json({ 'msg': 'Xoá thành công Board!',board });
+          if (boardDelete) {
+            res.status(200).json({ 'msg': 'Xoá thành công Board!',board: boardDelete });
           } else {
             throw new Error('Thất bại !');
           }
