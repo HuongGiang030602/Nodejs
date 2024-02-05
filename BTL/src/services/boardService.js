@@ -23,6 +23,15 @@ class BoardService{
         }
     }
 
+    getBoard = async(id) => {
+        try {
+            const board = await Board.findById({_id : id});
+            return board;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     update = async(id,data) => {
         try {
             //Xử lý các nghiệp vụ liên quan
@@ -30,7 +39,7 @@ class BoardService{
            console.log(result);
            return true;
         } catch (error) {
-            throw error;
+            throw new Error('Không tìm thấy idBoard');
         }
     }
 

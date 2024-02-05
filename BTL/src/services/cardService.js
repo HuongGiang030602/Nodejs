@@ -1,6 +1,7 @@
 const Board = require("../models/Board");
 const Card = require("../models/Card");
 const List = require("../models/List");
+const User = require("../models/User")
 
 class CardService{
 
@@ -13,6 +14,25 @@ class CardService{
         }
     }
 
+    checkCard = async (idCard) => { 
+        try {
+            const card = await Card.findOne({_id: idCard}) 
+            return card;
+          } catch (error) {
+            throw new Error('Không tồn tại idCard này');
+          }
+    }
+
+
+    getMember = async (data) => {
+        try {
+            const user = await User.find({email: { $in: data.member} }).select('-_id username phone age');
+            console.log(user);
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
 
     create = async (data) =>{
         

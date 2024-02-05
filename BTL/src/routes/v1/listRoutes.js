@@ -30,7 +30,7 @@ router.post('/',validateListData, verifyToken,listController.create)
 
 router.get('/:idBoard', verifyToken,listController.getAll)
 
-router.put('/:idList',validateListData, verifyToken,listController.update)
+router.put('/:idList', verifyToken,listController.update)
 
 router.delete('/:idList',verifyToken ,listController.delete)
 

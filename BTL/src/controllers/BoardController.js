@@ -6,7 +6,7 @@ class BoardController{
             const { title, cover } = req.body;
             
             if (req.file) {
-                console.log('Create a board!');
+                console.log('Tạo Board thành công!');
             } else {
                 throw new Error('Chỉ hỗ trợ định dạng jpg và png');
             }
@@ -52,14 +52,17 @@ class BoardController{
             };
         
             const result = await boardService.update(id, data);
-        
+            const boards = await boardService.getBoard(id);
             res.status(200).json({
-                board: result
+                board: result,
+                boards
             });
         } catch (error) {
             next(error);
         }
       };
+
+      
     delete = async (req, res, next) => {
         try {
           const { id } = req.params;
@@ -69,7 +72,7 @@ class BoardController{
           if (board) {
             res.status(200).json({ 'msg': 'Xoá thành công Board!',board });
           } else {
-            throw new Error('Fail');
+            throw new Error('Thất bại !');
           }
         } catch (error) {
           throw error;

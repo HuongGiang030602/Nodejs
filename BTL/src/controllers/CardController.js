@@ -5,33 +5,29 @@ class CardController{
         try {
             const {title,idList,describe,member,due_date} = req.body;
 
-            if(req.files) {
-                //kiểm tra xem có tệp đính kèm ảnh bìa ("cover") được gửi trong yêu cầu không
-                //Nếu có, xử lý chúng và lưu đường dẫn tương ứng vào các biến "coverPath" và "attachmentPaths"
-                const cover = req.files ? req.files['cover'] : null;
-                const coverPath = cover ? cover[0].path : null;
-                
-                // Xử lý attachment
-                const attachment = req.files ? req.files['attachment'] : null;
-                const attachmentPaths = attachment ? attachment.map(file => file.path) : [];
-    
-                var data = {
-                    title, describe, member, due_date,
-    
-                    cover: coverPath, 
-                    idList,
-                    // attachment
-                    attachment: attachmentPaths
-                }
-            }     
+            const coverPath = req.files?.cover?.[0]?.path ?? null;
+            const attachmentPaths = req.files?.attachment?.map(file => file.path) ?? [];
+
+            const data = {
+                title,
+                describe,
+                member,
+                due_date,
+                cover: coverPath,
+                idList,
+                attachment: attachmentPaths
+            };
     
             let dataCard = {idList};
+            let dataMember = {member};
             const list = await cardService.checkIDList(dataCard)
     
             if(list) {
                 const card = await cardService.create(data);
+                const members = await cardService.getMember(dataMember)
                 res.status(200).json({
-                    card
+                    card,
+                    members
                 })
             } else { 
                 res.status(404).json({
@@ -41,7 +37,7 @@ class CardController{
         
             
         } catch (error) {
-            throw error;
+            next (error);
         }
     };
 
@@ -75,38 +71,46 @@ class CardController{
         try {
             const {title, describe, member, due_date } = req.body;
             const {idCard} = req.params;
-            if(req.files) {
-                // Xử lý cover
-                const cover = req.files ? req.files['cover'] : null;
-                const coverPath = cover ? cover[0].path : null;
-                
 
-                // Xử lý attachment
-                const attachment = req.files ? req.files['attachment'] : null;
-                const attachmentPaths = attachment ? attachment.map(file => file.path) : [];
+            const coverPath = req.files?.cover?.[0]?.path ?? null;
+            const attachmentPaths = req.files?.attachment?.map(file => file.path) ?? [];
 
-                var data = {
-                    title, describe, member, due_date,
+            const data = {
+                title,
+                describe,
+                member,
+                due_date,
+                cover: coverPath,
+                attachment: attachmentPaths
+            };
 
-                    cover: coverPath, 
-                    // attachment
-                    attachment: attachmentPaths
-                }
-            }     
+            let dataMembers = {member}
 
-            const result = await cardService.update(idCard, data)
-            console.log(result)
-            if(result) {
-                res.status(200).json({
-                    'msg': 'Updated card'
-                })
-            } else { 
-                throw new Error('Update failed');
+           
+            const result = await cardService.checkCard(idCard);
+            if (!result) {
+                return res.status(404).json({ msg: 'Không tìm thấy idCard' });
             }
+
+            const cardPut = await cardService.update(idCard, data);
+            if (!cardPut) {
+                throw new Error('Cập nhật thông tin Card thất bại');
+            }
+
+            const card = await cardService.getCard(idCard);
+            const members = await cardService.getMember(dataMembers);
+
+            res.status(200).json({
+                "msg": 'Cập nhật thông tin Card thành công!',
+                card,
+                members
+            });
         } catch (error) {
             next(error);
         }
-      };
+    };
+
+
     delete = async (req, res, next) => {
         try {
           const { idCard } = req.params;

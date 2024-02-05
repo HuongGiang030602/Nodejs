@@ -26,7 +26,8 @@ class UserController{
             } else {
                 const user = await UserService.createUser(data)
                 res.status(200).json({
-                    'msg' : 'Đăng ký thành công !'
+                    'msg' : 'Đăng ký thành công !',
+                    user
                 })
             }
 
@@ -57,16 +58,25 @@ class UserController{
             let data = {
                 username, email, phone, password,age
             }
-            const result = await UserService.updateUser(id,data);
 
-            if(result) {
-                res.status(200).json({'msg': `Update thành công`});
-            }else {
-                throw new Error(`Không thành công`);
+            const result = await UserService.checkId(id);
+            if (!result) {
+                return res.status(404).json({ error: 'Không tìm thấy!' });
             }
-         
+              
+            const userPut = await UserService.updateUser(id, data);
+            if (!userPut) {
+                throw new Error('Cập nhật thông tin người dùng không thành công');
+            }
+              
+            const user = await UserService.getUser(id);
+            return res.status(200).json({
+                "msg": 'Cập nhật thành công thông tin người dùng',
+                user
+            });
+
         } catch (error){
-            throw error;
+            next (error);
         }
     }
 
@@ -78,15 +88,15 @@ class UserController{
             //Gọi đến tầng service
             
             const result = await UserService.deleteUser(id);
-
+            // console.log(result)
             if(result) {
-                res.status(200).json({'msg': `delete`});
+                res.status(200).json({'msg': `Xoá thông tin user thành công`});
             }else {
-                throw new Error(`delete fail`);
+                throw new Error(`Xoá không thành công`);
             }
          
         } catch (error){
-            throw error;
+            next (error);
         }
     }
 }

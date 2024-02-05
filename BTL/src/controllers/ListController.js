@@ -15,7 +15,7 @@ class ListController{
             const result = await listService.checkIDBoard(id);
 
             if (!result) {
-                res.status(401).json({
+                res.status(404).json({
                     message: 'idBoard không tồn tại !'
                 })
             }else {
@@ -26,11 +26,14 @@ class ListController{
             }
             
         } catch (error) {
-            res.status(401).json({
-                message: 'Lỗi server !'
+            res.status(404).json({
+                message: 'Không tìm thấy !'
             })
         }
     };
+
+
+    
 
     getAll = async(req, res, next) =>{
         try {
@@ -48,35 +51,52 @@ class ListController{
         try {
             const {idList} = req.params;
             
-            const { title} = req.body;
+            const {title} = req.body;
         
             // Tạo object mới chứa thông tin cập nhật
             let data = {
                 title
             };
-        
-            const result = await listService.update(idList, data);
-        
+
+            const result = await listService.checkList(idList);
+            if (!result) {
+                return res.status(404).json({ error: 'Không tìm thấy' });
+            }
+
+            const listPut = await listService.update(idList, data);
+            if (!listPut) {
+                throw new Error('Cập nhật thông tin List thất bại');
+            }
+
+            const list = await listService.getList(idList);
             res.status(200).json({
-                list: result
+                "msg": 'Cập nhật thông tin List thành công',
+                list
             });
+        
         } catch (error) {
             next(error);
         }
       };
+
+      
     delete = async (req, res, next) => {
         try {
-          const { idList } = req.params;
+            const { idList } = req.params;
       
-          const list = await listService.delete(idList);
-      
-          if (list) {
-            res.status(200).json({ 'msg': 'List deleted successfully!' });
-          } else {
-            throw new Error('Fail');
-          }
+            const list = await listService.delete(idList);
+            console.log(list);
+            if(list) {
+                res.status(200).json({
+                    'msg': 'Xoá thành công'
+                })
+            }else {
+                res.status(404).json({
+                    'msg': 'Không tìm thấy thông tin cần xoá'
+                })
+            }
         } catch (error) {
-          throw error;
+          next (error);
         }
     };
 }

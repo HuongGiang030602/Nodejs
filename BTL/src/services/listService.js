@@ -12,6 +12,24 @@ class ListService{
         }
     }
 
+    checkList = async (idList) => { 
+        try {
+            const list = await List.findOne({_id: idList}); 
+            return list;
+          } catch (error) {
+            throw new Error('Không tồn tại idList này');
+          }
+    }
+
+    getList = async (id) => {
+        try {
+            const list = await List.findById(id);
+            return list;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 
     create = async (data) =>{
         
@@ -29,7 +47,7 @@ class ListService{
 
     getAll = async(idBoard) => {
         try {
-            const lists = await List.find({idBoard});
+            const lists = await List.find({ idBoard }).sort({ position: -1 });
             // const lists = await List.find({'title': 'Bảng 1'});
             console.log(lists)
             return lists;
@@ -44,19 +62,19 @@ class ListService{
            const result = await List.updateOne({_id: id},{title: data.title});
            return true;
         } catch (error) {
-            throw error;
+            throw new Error('Không tồn tại List này');          
         }
     }
 
     delete = async(id) => {
         try {
             //Xử lý các nghiệp vụ liên quan
+            
             const list = await List.findById(id);
-            console.log(list);
             await list.deleteOne();
             return true;
         } catch (error) {
-            throw error;
+            throw new Error('Không tồn tại List này');            
         }
     }
 }
